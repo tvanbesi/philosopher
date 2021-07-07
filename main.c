@@ -25,7 +25,6 @@ static int
 			return (-1);
 		philosopher[n_philo]->id = n_philo;
 		philosopher[n_philo]->status = ALIVE;
-		philosopher[n_philo]->tse = 0;
 		if (argc == 6)
 			philosopher[n_philo]->n_eat = ft_atoi(argv[5]);
 		else
@@ -44,6 +43,15 @@ static int
 }
 
 static void
+	*death(void *arg)
+{
+	t_philosopher	**philosopher;
+
+	philosopher = (t_philosopher**)arg;
+	
+}
+
+static void
 	*philo_thread(void *arg)
 {
 	t_philosopher	*philosopher;
@@ -56,6 +64,8 @@ static void
 		pthread_mutex_lock(philosopher->lfork);
 		pthread_mutex_lock(philosopher->wlock);
 		gettimeofday(&time, NULL);
+		philosopher->tse_sec = time.tv_sec;
+		philosopher->tse_usec = time.tv_usec;
 		printf("%ld+%ld Philosopher %d is eating\n", time.tv_sec % 100, time.tv_usec / 1000, philosopher->id);
 		pthread_mutex_unlock(philosopher->wlock);
 		philosopher->n_eat--;
@@ -80,6 +90,7 @@ int
 {
 	t_philosopher		**philosopher;
 	pthread_t			*tid;
+	pthread_t			death;
 	pthread_mutex_t		**fork;
 	pthread_mutex_t		wlock;
 	int					n_philo;
@@ -107,6 +118,8 @@ int
 	if (!(tid = malloc(sizeof(*tid) * n_philo)))
 		return (-1);
 	i = 0;
+	if (pthread_create(&death, NULL, &death, philosopher) != 0)
+		return (-1);
 	while (i < n_philo)
 	{
 		if (pthread_create(&(tid[i]), NULL, &philo_thread, philosopher[i]) != 0)

@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/07 19:49:26 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/07 22:13:50 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,8 @@ typedef struct		s_philosopher
 {
 	int				id;
 	int				status;
-	int				tse;
+	long int		tse_sec;
+	long int		tse_usec;
 	int				n_eat;
 	int				ttd;
 	int				tte;
