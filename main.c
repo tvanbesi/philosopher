@@ -69,20 +69,9 @@ static void
 		while (*philosopher)
 		{
 			gettimeofday(&time, NULL);
-			if (time.tv_sec - (*philosopher)->tse_sec > (*philosopher)->ttd / 1000)
+			if (time.tv_sec - (*philosopher)->tse_sec >= 0)
 			{
-				if (time.tv_usec - (*philosopher)->tse_usec > (*philosopher)->ttd - ((time.tv_sec - (*philosopher)->tse_sec) * 1000))
-				{
-					(*philosopher)->status = DEAD;
-					pthread_mutex_lock((*philosopher)->wlock);
-					gettimeofday(&time, NULL);
-					printf("%ld+%ld Philosopher %d had died\n", time.tv_sec % 100, time.tv_usec / 1000, (*philosopher)->id);
-					pthread_mutex_unlock((*philosopher)->wlock);
-				}
-			}
-			else if (time.tv_sec - (*philosopher)->tse_sec == (*philosopher)->ttd / 1000)
-			{
-				if (time.tv_usec - (*philosopher)->tse_usec > (*philosopher)->ttd)
+				if ((time.tv_usec / 1000) - ((*philosopher)->tse_usec / 1000) > (*philosopher)->ttd - ((time.tv_sec - (*philosopher)->tse_sec) * 1000))
 				{
 					(*philosopher)->status = DEAD;
 					pthread_mutex_lock((*philosopher)->wlock);
@@ -176,6 +165,7 @@ int
 		return (-1);
 	pthread_mutex_lock(&wlock);
 	gettimeofday(&time, NULL);
+	printf("%ld+%ld\n", time.tv_sec % 100, time.tv_usec / 1000);
 	i = 0;
 	while (i < n_philo)
 	{
