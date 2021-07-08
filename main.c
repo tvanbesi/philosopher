@@ -63,17 +63,6 @@ static void
 	int				anydead;
 
 	philosopher = (t_philosopher**)arg;
-	pthread_mutex_lock(philosopher[0]->wlock);
-	printf("Initializing\n");
-	gettimeofday(&time, NULL);
-	while (*philosopher)
-	{
-		(*philosopher)->tse_sec = time.tv_sec;
-		(*philosopher)->tse_usec = time.tv_usec;
-		philosopher++;
-	}
-	philosopher = (t_philosopher**)arg;
-	pthread_mutex_unlock(philosopher[0]->wlock);
 	anydead = 0;
 	while (!anydead && !done_eating(philosopher))
 	{
@@ -162,6 +151,7 @@ int
 	pthread_mutex_t		wlock;
 	int					n_philo;
 	int					i;
+	struct timeval		time;
 
 	if (argc < 5 || argc > 6)
 		return (-1);
@@ -184,9 +174,19 @@ int
 		return (-1);
 	if (!(tid = malloc(sizeof(*tid) * n_philo)))
 		return (-1);
+	pthread_mutex_lock(&wlock);
+	gettimeofday(&time, NULL);
 	i = 0;
+	while (i < n_philo)
+	{
+		philosopher[i]->tse_sec = time.tv_sec;
+		philosopher[i]->tse_usec = time.tv_usec;
+		i++;
+	}
+	pthread_mutex_unlock(&wlock);
 	if (pthread_create(&monitor, NULL, &monitor_thread, philosopher) != 0)
 		return (-1);
+	i = 0;
 	while (i < n_philo)
 	{
 		if (pthread_create(&(tid[i]), NULL, &philo_thread, philosopher[i]) != 0)
