@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 13:03:14 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/09 19:17:51 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,11 +79,16 @@ t_philosopher
 		philosopher[i]->id = i;
 		philosopher[i]->status = ALIVE;
 		assign_data(philosopher[i], philo_data);
-		philosopher[i]->rfork = fork[i];
-		if (i == 0)
-			philosopher[i]->lfork = fork[philo_data.n_philo - 1];
+		if (i % 2 == 0)
+		{
+			philosopher[i]->ffork = fork[(i + 1) % philo_data.n_philo];
+			philosopher[i]->sfork = fork[i];
+		}
 		else
-			philosopher[i]->lfork = fork[i - 1];
+		{
+			philosopher[i]->ffork = fork[i];
+			philosopher[i]->sfork = fork[(i + 1) % philo_data.n_philo];
+		}
 		philosopher[i]->wlock = wlock;
 		i++;
 	}

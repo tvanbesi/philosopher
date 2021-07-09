@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 13:04:06 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 19:05:14 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,8 +44,8 @@ typedef struct		s_philosopher
 	int				ttd;
 	int				tte;
 	int				tts;
-	pthread_mutex_t	*rfork;
-	pthread_mutex_t	*lfork;
+	pthread_mutex_t	*ffork;
+	pthread_mutex_t	*sfork;
 	pthread_mutex_t	*wlock;
 }					t_philosopher;
 

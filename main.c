@@ -71,8 +71,16 @@ static void
 	philosopher = (t_philosopher*)arg;
 	while (philosopher->status == ALIVE)
 	{
-		pthread_mutex_lock(philosopher->rfork);
-		pthread_mutex_lock(philosopher->lfork);
+		pthread_mutex_lock(philosopher->ffork);
+		pthread_mutex_lock(philosopher->wlock);
+		gettimeofday(&time, NULL);
+		printf("%ld+%ld Philosopher %d has taken a fork\n", time.tv_sec % 100, time.tv_usec / 1000, philosopher->id);
+		pthread_mutex_unlock(philosopher->wlock);
+		pthread_mutex_lock(philosopher->sfork);
+		pthread_mutex_lock(philosopher->wlock);
+		gettimeofday(&time, NULL);
+		printf("%ld+%ld Philosopher %d has taken a fork\n", time.tv_sec % 100, time.tv_usec / 1000, philosopher->id);
+		pthread_mutex_unlock(philosopher->wlock);
 		pthread_mutex_lock(philosopher->wlock);
 		gettimeofday(&time, NULL);
 		philosopher->tse_sec = time.tv_sec;
@@ -83,8 +91,8 @@ static void
 		if (philosopher->n_eat > 0)
 			philosopher->n_eat--;
 		usleep(philosopher->tte * 1000);
-		pthread_mutex_unlock(philosopher->rfork);
-		pthread_mutex_unlock(philosopher->lfork);
+		pthread_mutex_unlock(philosopher->ffork);
+		pthread_mutex_unlock(philosopher->sfork);
 		pthread_mutex_lock(philosopher->wlock);
 		gettimeofday(&time, NULL);
 		if (philosopher->status == ALIVE)
