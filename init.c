@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 19:17:51 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 19:33:00 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,15 +50,6 @@ t_philo_data
 	return (philo_data);
 }
 
-static void
-	assign_data(t_philosopher *philosopher, t_philo_data philo_data)
-{
-	philosopher->ttd = philo_data.ttd;
-	philosopher->tte = philo_data.tte;
-	philosopher->tts = philo_data.tts;
-	philosopher->n_eat = philo_data.n_eat;
-}
-
 t_philosopher
 	**init_philosopher(t_philo_data philo_data,
 	pthread_mutex_t **fork, pthread_mutex_t *wlock)
@@ -79,16 +70,7 @@ t_philosopher
 		philosopher[i]->id = i;
 		philosopher[i]->status = ALIVE;
 		assign_data(philosopher[i], philo_data);
-		if (i % 2 == 0)
-		{
-			philosopher[i]->ffork = fork[(i + 1) % philo_data.n_philo];
-			philosopher[i]->sfork = fork[i];
-		}
-		else
-		{
-			philosopher[i]->ffork = fork[i];
-			philosopher[i]->sfork = fork[(i + 1) % philo_data.n_philo];
-		}
+		assign_fork(i, philosopher[i], fork, philo_data.n_philo);
 		philosopher[i]->wlock = wlock;
 		i++;
 	}

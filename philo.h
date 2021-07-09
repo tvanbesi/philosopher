@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 19:05:14 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 21:45:27 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,12 @@
 # include <sys/time.h>
 # include <pthread.h>
 # include <unistd.h>
+
+# define EAT		"is eating"
+# define SLEEP		"is sleeping"
+# define THINK		"is thinking"
+# define TAKE		"has taken a fork"
+# define DIE		"has died"
 
 typedef enum		e_status
 {
@@ -49,15 +55,26 @@ typedef struct		s_philosopher
 	pthread_mutex_t	*wlock;
 }					t_philosopher;
 
-int		ft_atoi(const char *str);
-int		ft_isspace(int c);
-int		ft_isdigit(int c);
+int				ft_atoi(const char *str);
+int				ft_isspace(int c);
+int				ft_isdigit(int c);
+
+void			assign_data(t_philosopher *philosopher, t_philo_data philo_data);
+void			assign_fork(int i, t_philosopher *philosopher, pthread_mutex_t **fork, int n);
 
 pthread_mutex_t	**init_fork(int n);
 t_philo_data	init_philo_data(int argc, char **argv);
 t_philosopher	**init_philosopher(t_philo_data philo_data, pthread_mutex_t **fork, pthread_mutex_t *wlock);
 void			init_time(t_philosopher **philosopher, pthread_mutex_t *wlock);
 
+int				thread(int n, t_philosopher **philosopher);
+void			print_action(t_philosopher *philosopher, char *action, struct timeval time);
 
+int				philo_starved(t_philosopher *philosopher, struct timeval time);
+void			philo_take(t_philosopher *philosopher);
+void			philo_eat(t_philosopher *philosopher);
+void			philo_sleep(t_philosopher *philosopher);
+void			philo_think(t_philosopher *philosopher);
+void			philo_die(t_philosopher *philosopher);
 
 #endif
