@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 12:40:33 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 13:03:14 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,8 +50,18 @@ t_philo_data
 	return (philo_data);
 }
 
+static void
+	assign_data(t_philosopher *philosopher, t_philo_data philo_data)
+{
+	philosopher->ttd = philo_data.ttd;
+	philosopher->tte = philo_data.tte;
+	philosopher->tts = philo_data.tts;
+	philosopher->n_eat = philo_data.n_eat;
+}
+
 t_philosopher
-	**init_philosopher(t_philo_data philo_data, pthread_mutex_t **fork, pthread_mutex_t *wlock)
+	**init_philosopher(t_philo_data philo_data,
+	pthread_mutex_t **fork, pthread_mutex_t *wlock)
 {
 	t_philosopher	**philosopher;
 	int				i;
@@ -68,10 +78,7 @@ t_philosopher
 			return (NULL);
 		philosopher[i]->id = i;
 		philosopher[i]->status = ALIVE;
-		philosopher[i]->ttd = philo_data.ttd;
-		philosopher[i]->tte = philo_data.tte;
-		philosopher[i]->tts = philo_data.tts;
-		philosopher[i]->n_eat = philo_data.n_eat;
+		assign_data(philosopher[i], philo_data);
 		philosopher[i]->rfork = fork[i];
 		if (i == 0)
 			philosopher[i]->lfork = fork[philo_data.n_philo - 1];
@@ -81,4 +88,21 @@ t_philosopher
 		i++;
 	}
 	return (philosopher);
+}
+
+void
+	init_time(t_philosopher **philosopher, pthread_mutex_t *wlock)
+{
+	struct timeval	time;
+
+	pthread_mutex_lock(wlock);
+	gettimeofday(&time, NULL);
+	printf("%ld+%ld\n", time.tv_sec % 100, time.tv_usec / 1000);
+	while (*philosopher)
+	{
+		(*philosopher)->tse_sec = time.tv_sec;
+		(*philosopher)->tse_usec = time.tv_usec;
+		philosopher++;
+	}
+	pthread_mutex_unlock(wlock);
 }

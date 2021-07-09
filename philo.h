@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 12:40:11 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 13:04:06 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,9 +54,10 @@ int		ft_isspace(int c);
 int		ft_isdigit(int c);
 
 pthread_mutex_t	**init_fork(int n);
-
 t_philo_data	init_philo_data(int argc, char **argv);
-
 t_philosopher	**init_philosopher(t_philo_data philo_data, pthread_mutex_t **fork, pthread_mutex_t *wlock);
+void			init_time(t_philosopher **philosopher, pthread_mutex_t *wlock);
+
+
 
 #endif

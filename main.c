@@ -110,11 +110,11 @@ int
 	pthread_mutex_t		wlock;
 	t_philo_data		philo_data;
 	int					i;
-	struct timeval		time;
 
 	//arg sanity check
 	if (argc < 5 || argc > 6)
 		return (-1);
+
 	philo_data = init_philo_data(argc, argv);
 	fork = init_fork(philo_data.n_philo);
 	if (!fork)
@@ -124,19 +124,10 @@ int
 	philosopher = init_philosopher(philo_data, fork, &wlock);
 	if (!philosopher)
 		return (-1);
+
 	if (!(tid = malloc(sizeof(*tid) * philo_data.n_philo)))
 		return (-1);
-	pthread_mutex_lock(&wlock);
-	gettimeofday(&time, NULL);
-	printf("%ld+%ld\n", time.tv_sec % 100, time.tv_usec / 1000);
-	i = 0;
-	while (i < philo_data.n_philo)
-	{
-		philosopher[i]->tse_sec = time.tv_sec;
-		philosopher[i]->tse_usec = time.tv_usec;
-		i++;
-	}
-	pthread_mutex_unlock(&wlock);
+	init_time(philosopher, &wlock);
 	if (pthread_create(&monitor, NULL, &monitor_thread, philosopher) != 0)
 		return (-1);
 	i = 0;
