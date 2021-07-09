@@ -25,36 +25,6 @@ static int
 	return (1);
 }
 
-static int
-	init(t_philosopher **philosopher, int argc, char **argv, pthread_mutex_t **fork, pthread_mutex_t *wlock)
-{
-	int	n_philo;
-
-	n_philo = ft_atoi(argv[1]);
-	philosopher[n_philo] = NULL;
-	while (n_philo-- > 0)
-	{
-		if (!(philosopher[n_philo] = malloc(sizeof(**philosopher))))
-			return (-1);
-		philosopher[n_philo]->id = n_philo;
-		philosopher[n_philo]->status = ALIVE;
-		if (argc == 6)
-			philosopher[n_philo]->n_eat = ft_atoi(argv[5]);
-		else
-			philosopher[n_philo]->n_eat = -1;
-		philosopher[n_philo]->ttd = ft_atoi(argv[2]);
-		philosopher[n_philo]->tte = ft_atoi(argv[3]);
-		philosopher[n_philo]->tts = ft_atoi(argv[4]);
-		philosopher[n_philo]->rfork = fork[n_philo];
-		if (n_philo > 0)
-			philosopher[n_philo]->lfork = fork[n_philo - 1];
-		else
-			philosopher[n_philo]->lfork = fork[ft_atoi(argv[1]) - 1];
-		philosopher[n_philo]->wlock = wlock;
-	}
-	return (0);
-}
-
 static void
 	*monitor_thread(void *arg)
 {
@@ -138,36 +108,29 @@ int
 	pthread_t			monitor;
 	pthread_mutex_t		**fork;
 	pthread_mutex_t		wlock;
-	int					n_philo;
+	t_philo_data		philo_data;
 	int					i;
 	struct timeval		time;
 
+	//arg sanity check
 	if (argc < 5 || argc > 6)
 		return (-1);
-	n_philo = ft_atoi(argv[1]);
-	if (!(philosopher = malloc(sizeof(*philosopher) * (n_philo + 1))))
+	philo_data = init_philo_data(argc, argv);
+	fork = init_fork(philo_data.n_philo);
+	if (!fork)
 		return (-1);
-	if (!(fork = malloc(sizeof(*fork) * n_philo)))
-		return (-1);
-	i = 0;
-	while (i < n_philo)
-		if (!(fork[i++] = malloc(sizeof(**fork))))
-			return (-1);
 	if (pthread_mutex_init(&wlock, NULL) != 0)
 		return (-1);
-	i = 0;
-	while (i < n_philo)
-		if (pthread_mutex_init(fork[i++], NULL) != 0)
-			return (-1);
-	if (init(philosopher, argc, argv, fork, &wlock) != 0)
+	philosopher = init_philosopher(philo_data, fork, &wlock);
+	if (!philosopher)
 		return (-1);
-	if (!(tid = malloc(sizeof(*tid) * n_philo)))
+	if (!(tid = malloc(sizeof(*tid) * philo_data.n_philo)))
 		return (-1);
 	pthread_mutex_lock(&wlock);
 	gettimeofday(&time, NULL);
 	printf("%ld+%ld\n", time.tv_sec % 100, time.tv_usec / 1000);
 	i = 0;
-	while (i < n_philo)
+	while (i < philo_data.n_philo)
 	{
 		philosopher[i]->tse_sec = time.tv_sec;
 		philosopher[i]->tse_usec = time.tv_usec;
@@ -177,7 +140,7 @@ int
 	if (pthread_create(&monitor, NULL, &monitor_thread, philosopher) != 0)
 		return (-1);
 	i = 0;
-	while (i < n_philo)
+	while (i < philo_data.n_philo)
 	{
 		if (pthread_create(&(tid[i]), NULL, &philo_thread, philosopher[i]) != 0)
 			return (-1);
@@ -185,8 +148,8 @@ int
 	}
 	pthread_join(monitor, NULL);
 	i = 0;
-	while (i < n_philo)
+	while (i < philo_data.n_philo)
 		pthread_mutex_destroy(fork[i++]);
 	pthread_mutex_destroy(&wlock);
-	//free all philosophers
+	//free all malloc and destroy all threads and mutexes
 }
