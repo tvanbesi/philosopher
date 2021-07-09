@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/09 21:47:15 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 21:48:05 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ static void
 			}
 			philosopher++;
 		}
-		philosopher = (t_philosopher**)arg;
+		philosopher = (t_philosopher **)arg;
 	}
 	return (NULL);
 }

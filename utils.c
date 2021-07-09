@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 19:20:54 by user42            #+#    #+#             */
-/*   Updated: 2021/07/09 21:45:00 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/09 21:48:35 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,8 @@ void
 int
 	philo_starved(t_philosopher *philosopher, struct timeval time)
 {
-	if ((time.tv_usec / 1000) - (philosopher->tse_usec / 1000) > philosopher->ttd - ((time.tv_sec - philosopher->tse_sec) * 1000))
+	if ((time.tv_usec / 1000) - (philosopher->tse_usec / 1000)
+		> philosopher->ttd - ((time.tv_sec - philosopher->tse_sec) * 1000))
 		return (1);
 	return (0);
 }
