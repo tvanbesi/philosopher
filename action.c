@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 21:01:49 by user42            #+#    #+#             */
-/*   Updated: 2021/07/09 21:41:57 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/10 15:01:20 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,8 +78,6 @@ void
 	struct timeval	time;
 
 	philosopher->status = DEAD;
-	pthread_mutex_lock(philosopher->wlock);
 	gettimeofday(&time, NULL);
 	print_action(philosopher, DIE, time);
-	pthread_mutex_unlock(philosopher->wlock);
 }

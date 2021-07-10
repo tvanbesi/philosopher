@@ -6,11 +6,27 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/10 14:29:52 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/10 15:02:06 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+static void
+	freephilo(t_philosopher **philosopher)
+{
+	t_philosopher	**tmp;
+
+	if (all_alive(philosopher))
+		pthread_mutex_lock((*philosopher)->wlock);
+	tmp = philosopher;
+	while (*tmp)
+	{
+		free(*tmp);
+		tmp++;
+	}
+	free(philosopher);
+}
 
 static void
 	*monitor_routine(void *arg)
@@ -28,6 +44,7 @@ static void
 			{
 				if (philo_starved(*philosopher, time))
 				{
+					pthread_mutex_lock((*philosopher)->wlock);
 					philo_die(*philosopher);
 					break ;
 				}
@@ -36,6 +53,7 @@ static void
 		}
 		philosopher = (t_philosopher **)arg;
 	}
+	freephilo(philosopher);
 	return (NULL);
 }
 
@@ -64,7 +82,10 @@ static int
 {
 	pthread_t	philo_t;
 
-	return (pthread_create(&philo_t, NULL, &philo_routine, philosopher));
+	if (pthread_create(&philo_t, NULL, &philo_routine, philosopher) != 0)
+		return (-1);
+	pthread_detach(philo_t);
+	return (0);
 }
 
 int

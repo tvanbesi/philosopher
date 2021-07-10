@@ -13,6 +13,14 @@
 
 #include "philo.h"
 
+static void
+	freefork(pthread_mutex_t **fork, int n)
+{
+	while (n-- > 0)
+		free(fork[n]);
+	free(fork);
+}
+
 int
 	main(int argc, char **argv)
 {
@@ -35,4 +43,5 @@ int
 	init_time(philosopher, &wlock);
 	if (thread(philo_data.n_philo, philosopher) != 0)
 		return (-1);
+	freefork(fork, philo_data.n_philo);
 }
