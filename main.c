@@ -20,7 +20,6 @@ int
 	pthread_mutex_t		**fork;
 	pthread_mutex_t		wlock;
 	t_philo_data		philo_data;
-	int					i;
 
 	if (argc < 5 || argc > 6)
 		return (-1);
@@ -36,9 +35,4 @@ int
 	init_time(philosopher, &wlock);
 	if (thread(philo_data.n_philo, philosopher) != 0)
 		return (-1);
-	i = 0;
-	while (i < philo_data.n_philo)
-		pthread_mutex_destroy(fork[i++]);
-	pthread_mutex_destroy(&wlock);
-	//free all malloc and destroy all threads and mutexes and stop all thread when one dude dies
 }

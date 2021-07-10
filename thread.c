@@ -6,35 +6,11 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/09 21:48:05 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/10 14:29:52 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
-
-static int
-	done_eating(t_philosopher **philosopher)
-{
-	while (*philosopher)
-	{
-		if ((*philosopher)->n_eat != 0)
-			return (0);
-		philosopher++;
-	}
-	return (1);
-}
-
-static int
-	all_alive(t_philosopher **philosopher)
-{
-	while (*philosopher)
-	{
-		if ((*philosopher)->status == DEAD)
-			return (0);
-		philosopher++;
-	}
-	return (1);
-}
 
 static void
 	*monitor_routine(void *arg)
@@ -83,27 +59,29 @@ static void
 	return (NULL);
 }
 
+static int
+	philo_thread(t_philosopher *philosopher)
+{
+	pthread_t	philo_t;
+
+	return (pthread_create(&philo_t, NULL, &philo_routine, philosopher));
+}
+
 int
 	thread(int n, t_philosopher **philosopher)
 {
-	pthread_t	*philo_t;
 	pthread_t	monitor_t;
 	int			i;
 
-	philo_t = malloc(sizeof(*philo_t) * n);
-	if (!philo_t)
-		return (-1);
 	if (pthread_create(&monitor_t, NULL, &monitor_routine, philosopher) != 0)
 		return (-1);
 	i = 0;
 	while (i < n)
 	{
-		if (pthread_create(&(philo_t[i]), NULL,
-				&philo_routine, philosopher[i]) != 0)
+		if (philo_thread(philosopher[i]) != 0)
 			return (-1);
 		i++;
 	}
 	pthread_join(monitor_t, NULL);
-	//free(philo_t);
 	return (0);
 }

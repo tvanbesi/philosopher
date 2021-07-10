@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 21:45:27 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/10 14:37:26 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,13 +25,13 @@
 # define TAKE		"has taken a fork"
 # define DIE		"has died"
 
-typedef enum		e_status
+typedef enum e_status
 {
 	DEAD,
 	ALIVE
 }					t_status;
 
-typedef struct		s_philo_data
+typedef struct s_philo_data
 {
 	int				n_philo;
 	int				ttd;
@@ -40,7 +40,7 @@ typedef struct		s_philo_data
 	int				n_eat;
 }					t_philo_data;
 
-typedef struct		s_philosopher
+typedef struct s_philosopher
 {
 	int				id;
 	int				status;
@@ -59,16 +59,23 @@ int				ft_atoi(const char *str);
 int				ft_isspace(int c);
 int				ft_isdigit(int c);
 
-void			assign_data(t_philosopher *philosopher, t_philo_data philo_data);
-void			assign_fork(int i, t_philosopher *philosopher, pthread_mutex_t **fork, int n);
+void			assign_data(t_philosopher *philosopher,
+					t_philo_data philo_data);
+void			assign_fork(int i, t_philosopher *philosopher,
+					pthread_mutex_t **fork, int n);
 
 pthread_mutex_t	**init_fork(int n);
 t_philo_data	init_philo_data(int argc, char **argv);
-t_philosopher	**init_philosopher(t_philo_data philo_data, pthread_mutex_t **fork, pthread_mutex_t *wlock);
+t_philosopher	**init_philosopher(t_philo_data philo_data,
+					pthread_mutex_t **fork, pthread_mutex_t *wlock);
 void			init_time(t_philosopher **philosopher, pthread_mutex_t *wlock);
 
+int				done_eating(t_philosopher **philosopher);
+int				all_alive(t_philosopher **philosopher);
+
 int				thread(int n, t_philosopher **philosopher);
-void			print_action(t_philosopher *philosopher, char *action, struct timeval time);
+void			print_action(t_philosopher *philosopher,
+					char *action, struct timeval time);
 
 int				philo_starved(t_philosopher *philosopher, struct timeval time);
 void			philo_take(t_philosopher *philosopher);
