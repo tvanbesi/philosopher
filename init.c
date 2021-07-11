@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/09 19:33:00 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/10 15:20:39 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,6 @@ void
 
 	pthread_mutex_lock(wlock);
 	gettimeofday(&time, NULL);
-	printf("%ld+%ld\n", time.tv_sec % 100, time.tv_usec / 1000);
 	while (*philosopher)
 	{
 		(*philosopher)->tse_sec = time.tv_sec;

@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 19:20:54 by user42            #+#    #+#             */
-/*   Updated: 2021/07/09 21:48:35 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/11 11:09:34 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void
 	assign_fork(int i, t_philosopher *philosopher,
 	pthread_mutex_t **fork, int n)
 {
-	if (i % 2 == 0)
+	if (i == n)
 	{
 		philosopher->ffork = fork[(i + 1) % n];
 		philosopher->sfork = fork[i];
@@ -40,8 +40,8 @@ void
 void
 	print_action(t_philosopher *philosopher, char *action, struct timeval time)
 {
-	printf("%ld+%ld Philosopher %d %s\n", time.tv_sec % 100,
-		time.tv_usec / 1000, philosopher->id, action);
+	printf("%02ld%03ld Philosopher %d %s\n", time.tv_sec % 100,
+		time.tv_usec / 1000, philosopher->id + 1, action);
 }
 
 int

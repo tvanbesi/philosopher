@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/10 15:02:06 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/11 11:09:56 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,10 @@ static void
 	*philo_routine(void *arg)
 {
 	t_philosopher	*philosopher;
-	struct timeval	time;
 
 	philosopher = (t_philosopher *)arg;
+	if (philosopher->id % 2)
+		usleep(philosopher->tte / 2 * 1000);
 	while (philosopher->status == ALIVE)
 	{
 		pthread_mutex_lock(philosopher->ffork);
