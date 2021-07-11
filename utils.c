@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 19:20:54 by user42            #+#    #+#             */
-/*   Updated: 2021/07/11 11:09:34 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/11 11:14:57 by user42           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,8 @@ void
 	assign_fork(int i, t_philosopher *philosopher,
 	pthread_mutex_t **fork, int n)
 {
-	if (i == n)
-	{
-		philosopher->ffork = fork[(i + 1) % n];
-		philosopher->sfork = fork[i];
-	}
-	else
-	{
-		philosopher->ffork = fork[i];
-		philosopher->sfork = fork[(i + 1) % n];
-	}
+	philosopher->ffork = fork[i];
+	philosopher->sfork = fork[(i + 1) % n];
 }
 
 void
