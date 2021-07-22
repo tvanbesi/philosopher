@@ -40,7 +40,7 @@ int
 	philosopher = init_philosopher(philo_data, fork, &wlock);
 	if (!philosopher)
 		return (-1);
-	init_time(philosopher, &wlock);
+	init_time(philosopher);
 	if (thread(philo_data.n_philo, philosopher) != 0)
 		return (-1);
 	freefork(fork, philo_data.n_philo);

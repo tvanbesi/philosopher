@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/10 14:37:26 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/22 10:52:03 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,7 @@ pthread_mutex_t	**init_fork(int n);
 t_philo_data	init_philo_data(int argc, char **argv);
 t_philosopher	**init_philosopher(t_philo_data philo_data,
 					pthread_mutex_t **fork, pthread_mutex_t *wlock);
-void			init_time(t_philosopher **philosopher, pthread_mutex_t *wlock);
+void			init_time(t_philosopher **philosopher);
 
 int				done_eating(t_philosopher **philosopher);
 int				all_alive(t_philosopher **philosopher);

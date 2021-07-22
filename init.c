@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/10 15:20:39 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/22 10:51:41 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,10 @@ t_philosopher
 }
 
 void
-	init_time(t_philosopher **philosopher, pthread_mutex_t *wlock)
+	init_time(t_philosopher **philosopher)
 {
 	struct timeval	time;
 
-	pthread_mutex_lock(wlock);
 	gettimeofday(&time, NULL);
 	while (*philosopher)
 	{
@@ -90,5 +89,4 @@ void
 		(*philosopher)->tse_usec = time.tv_usec;
 		philosopher++;
 	}
-	pthread_mutex_unlock(wlock);
 }
