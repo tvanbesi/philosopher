@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/22 15:34:27 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:04:11 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ t_philosopher
 		assign_fork(i, philosopher[i], fork, philo_data.n_philo);
 		philosopher[i]->wlock = wlock;
 		philosopher[i]->rlock = rlock[i];
+		philosopher[i]->ready = 0;
 		i++;
 	}
 	return (philosopher);

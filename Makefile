@@ -6,7 +6,8 @@ SRCS		=	action.c \
 				main.c \
 				thread.c \
 				utils.c \
-				utils_monitor.c
+				utils_monitor.c \
+				utils_thread.c
 OBJS		= ${SRCS:.c=.o}
 CC			= clang
 CFLAGS		= -Wall -Wextra -Werror -pthread

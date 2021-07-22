@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/06 11:56:54 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/22 15:45:36 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:15:09 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,7 @@ typedef struct s_philosopher
 	pthread_mutex_t	*sfork;
 	pthread_mutex_t	*wlock;
 	pthread_mutex_t	*rlock;
+	int				ready;
 }					t_philosopher;
 
 int				ft_atoi(const char *str);
@@ -81,17 +82,24 @@ void			init_time(t_philosopher **philosopher);
 
 int				done_eating(t_philosopher **philosopher);
 int				all_alive(t_philosopher **philosopher);
+int				all_ready(t_philosopher **philosopher);
 
 int				thread(int n, t_philosopher **philosopher);
+void			lock_philo(t_philosopher **philosopher);
+int				philo_can_continue(t_philosopher *philosopher,
+					pthread_mutex_t *rlock);
 void			print_action(t_philosopher *philosopher,
 					char *action, struct timeval time);
 
 int				philo_starved(t_philosopher *philosopher, struct timeval time);
 void			philo_take(t_philosopher *philosopher, pthread_mutex_t *rlock,
-					int nfork);
-void			philo_eat(t_philosopher *philosopher, pthread_mutex_t *rlock);
-void			philo_sleep(t_philosopher *philosopher, pthread_mutex_t *rlock);
-void			philo_think(t_philosopher *philosopher, pthread_mutex_t *rlock);
+					pthread_mutex_t *wlock, int nfork);
+void			philo_eat(t_philosopher *philosopher, pthread_mutex_t *rlock,
+					pthread_mutex_t *wlock);
+void			philo_sleep(t_philosopher *philosopher, pthread_mutex_t *rlock,
+					pthread_mutex_t *wlock);
+void			philo_think(t_philosopher *philosopher, pthread_mutex_t *rlock,
+					pthread_mutex_t *wlock);
 void			philo_die(t_philosopher *philosopher);
 
 #endif

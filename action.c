@@ -6,16 +6,18 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 21:01:49 by user42            #+#    #+#             */
-/*   Updated: 2021/07/22 15:41:02 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:17:40 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
 void
-	philo_take(t_philosopher *philosopher, pthread_mutex_t *rlock, int nfork)
+	philo_take(t_philosopher *philosopher, pthread_mutex_t *rlock,
+		pthread_mutex_t *wlock, int nfork)
 {
 	struct timeval	time;
+	pthread_mutex_t	*fork;
 
 	pthread_mutex_lock(rlock);
 	if (philosopher->status == DEAD)
@@ -24,18 +26,20 @@ void
 		return ;
 	}
 	if (nfork == FIRST)
-		pthread_mutex_lock(philosopher->ffork);
+		fork = philosopher->ffork;
 	else
-		pthread_mutex_lock(philosopher->sfork);
+		fork = philosopher->sfork;
 	pthread_mutex_unlock(rlock);
-	pthread_mutex_lock(philosopher->wlock);
+	pthread_mutex_lock(fork);
+	pthread_mutex_lock(wlock);
 	gettimeofday(&time, NULL);
 	print_action(philosopher, TAKE, time);
-	pthread_mutex_unlock(philosopher->wlock);
+	pthread_mutex_unlock(wlock);
 }
 
 void
-	philo_eat(t_philosopher *philosopher, pthread_mutex_t *rlock)
+	philo_eat(t_philosopher *philosopher, pthread_mutex_t *rlock,
+		pthread_mutex_t *wlock)
 {
 	struct timeval	time;
 
@@ -46,12 +50,12 @@ void
 		return ;
 	}
 	pthread_mutex_unlock(rlock);
-	pthread_mutex_lock(philosopher->wlock);
+	pthread_mutex_lock(wlock);
 	gettimeofday(&time, NULL);
 	philosopher->tse_sec = time.tv_sec;
 	philosopher->tse_usec = time.tv_usec;
 	print_action(philosopher, EAT, time);
-	pthread_mutex_unlock(philosopher->wlock);
+	pthread_mutex_unlock(wlock);
 	pthread_mutex_lock(rlock);
 	if (philosopher->n_eat > 0)
 		philosopher->n_eat--;
@@ -62,7 +66,8 @@ void
 }
 
 void
-	philo_sleep(t_philosopher *philosopher, pthread_mutex_t *rlock)
+	philo_sleep(t_philosopher *philosopher, pthread_mutex_t *rlock,
+		pthread_mutex_t *wlock)
 {
 	struct timeval	time;
 
@@ -73,17 +78,18 @@ void
 		return ;
 	}
 	pthread_mutex_unlock(rlock);
-	pthread_mutex_lock(philosopher->wlock);
+	pthread_mutex_lock(wlock);
 	gettimeofday(&time, NULL);
 	print_action(philosopher, SLEEP, time);
-	pthread_mutex_unlock(philosopher->wlock);
+	pthread_mutex_unlock(wlock);
 	pthread_mutex_lock(rlock);
 	usleep(philosopher->tts * 1000);
 	pthread_mutex_unlock(rlock);
 }
 
 void
-	philo_think(t_philosopher *philosopher, pthread_mutex_t *rlock)
+	philo_think(t_philosopher *philosopher, pthread_mutex_t *rlock,
+		pthread_mutex_t *wlock)
 {
 	struct timeval	time;
 
@@ -94,10 +100,10 @@ void
 		return ;
 	}
 	pthread_mutex_unlock(rlock);
-	pthread_mutex_lock(philosopher->wlock);
+	pthread_mutex_lock(wlock);
 	gettimeofday(&time, NULL);
 	print_action(philosopher, THINK, time);
-	pthread_mutex_unlock(philosopher->wlock);
+	pthread_mutex_unlock(wlock);
 }
 
 void
@@ -105,6 +111,7 @@ void
 {
 	struct timeval	time;
 
+	pthread_mutex_lock(philosopher->wlock);
 	philosopher->status = DEAD;
 	gettimeofday(&time, NULL);
 	print_action(philosopher, DIE, time);

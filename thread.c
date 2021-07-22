@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/22 15:44:13 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 16:19:03 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ static void
 {
 	t_philosopher	**tmp;
 
+	lock_philo(philosopher);
 	if (all_alive(philosopher))
 		pthread_mutex_lock((*philosopher)->wlock);
 	tmp = philosopher;
@@ -29,22 +30,14 @@ static void
 }
 
 static void
-	lock_philo(t_philosopher **philosopher)
-{
-	while (*philosopher)
-	{
-		pthread_mutex_lock((*philosopher)->rlock);
-		philosopher++;
-	}
-}
-
-static void
 	*monitor_routine(void *arg)
 {
 	t_philosopher	**philosopher;
 	struct timeval	time;
 
 	philosopher = (t_philosopher **)arg;
+	while (!all_ready(philosopher))
+		;
 	while (all_alive(philosopher) && !done_eating(philosopher))
 	{
 		while (*philosopher)
@@ -54,7 +47,6 @@ static void
 			{
 				if (philo_starved(*philosopher, time))
 				{
-					pthread_mutex_lock((*philosopher)->wlock);
 					philo_die(*philosopher);
 					break ;
 				}
@@ -63,20 +55,8 @@ static void
 		}
 		philosopher = (t_philosopher **)arg;
 	}
-	lock_philo(philosopher);
 	free_philo(philosopher);
 	return (NULL);
-}
-
-static int
-	philo_can_continue(t_philosopher *philosopher, pthread_mutex_t *rlock)
-{
-	int	r;
-
-	pthread_mutex_lock(rlock);
-	r = (philosopher->status == ALIVE && philosopher->n_eat != 0);
-	pthread_mutex_unlock(rlock);
-	return (r);
 }
 
 static void
@@ -84,20 +64,23 @@ static void
 {
 	t_philosopher	*philosopher;
 	pthread_mutex_t	*rlock;
+	pthread_mutex_t	*wlock;
 
 	philosopher = (t_philosopher *)arg;
 	rlock = philosopher->rlock;
+	wlock = philosopher->wlock;
+	philosopher->ready = 1;
 	pthread_mutex_lock(rlock);
 	if (philosopher->id % 2)
 		usleep(philosopher->tte / 2 * 1000);
 	pthread_mutex_unlock(rlock);
 	while (philo_can_continue(philosopher, rlock))
 	{
-		philo_take(philosopher, rlock, FIRST);
-		philo_take(philosopher, rlock, SECOND);
-		philo_eat(philosopher, rlock);
-		philo_sleep(philosopher, rlock);
-		philo_think(philosopher, rlock);
+		philo_take(philosopher, rlock, wlock, FIRST);
+		philo_take(philosopher, rlock, wlock, SECOND);
+		philo_eat(philosopher, rlock, wlock);
+		philo_sleep(philosopher, rlock, wlock);
+		philo_think(philosopher, rlock, wlock);
 	}
 	return (NULL);
 }
