@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/22 10:06:07 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 13:18:54 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,7 @@ static void
 	philosopher = (t_philosopher *)arg;
 	if (philosopher->id % 2)
 		usleep(philosopher->tte / 2 * 1000);
-	while (philosopher->status == ALIVE)
+	while (philosopher->status == ALIVE && philosopher->n_eat != 0)
 	{
 		pthread_mutex_lock(philosopher->ffork);
 		philo_take(philosopher);
