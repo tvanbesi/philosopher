@@ -6,7 +6,7 @@
 /*   By: tvanbesi <tvanbesi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 11:49:35 by tvanbesi          #+#    #+#             */
-/*   Updated: 2021/07/22 10:56:09 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 10:51:41 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ t_philo_data
 
 t_philosopher
 	**init_philosopher(t_philo_data philo_data,
-	pthread_mutex_t **fork)
+	pthread_mutex_t **fork, pthread_mutex_t *wlock)
 {
 	t_philosopher	**philosopher;
 	int				i;
@@ -71,6 +71,7 @@ t_philosopher
 		philosopher[i]->status = ALIVE;
 		assign_data(philosopher[i], philo_data);
 		assign_fork(i, philosopher[i], fork, philo_data.n_philo);
+		philosopher[i]->wlock = wlock;
 		i++;
 	}
 	return (philosopher);

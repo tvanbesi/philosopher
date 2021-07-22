@@ -26,6 +26,7 @@ int
 {
 	t_philosopher		**philosopher;
 	pthread_mutex_t		**fork;
+	pthread_mutex_t		wlock;
 	t_philo_data		philo_data;
 
 	if (argc < 5 || argc > 6)
@@ -34,7 +35,9 @@ int
 	fork = init_fork(philo_data.n_philo);
 	if (!fork)
 		return (-1);
-	philosopher = init_philosopher(philo_data, fork);
+	if (pthread_mutex_init(&wlock, NULL) != 0)
+		return (-1);
+	philosopher = init_philosopher(philo_data, fork, &wlock);
 	if (!philosopher)
 		return (-1);
 	init_time(philosopher);
