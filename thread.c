@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/22 10:06:07 by tvanbesi         ###   ########.fr       */
+/*   Updated: 2021/07/22 10:55:51 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,6 @@ static void
 {
 	t_philosopher	**tmp;
 
-	if (all_alive(philosopher))
-		pthread_mutex_lock((*philosopher)->wlock);
 	tmp = philosopher;
 	while (*tmp)
 	{
@@ -44,7 +42,6 @@ static void
 			{
 				if (philo_starved(*philosopher, time))
 				{
-					pthread_mutex_lock((*philosopher)->wlock);
 					philo_die(*philosopher);
 					break ;
 				}
