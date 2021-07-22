@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 19:20:54 by user42            #+#    #+#             */
-/*   Updated: 2021/07/11 11:14:57 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/22 09:51:39 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ void
 void
 	print_action(t_philosopher *philosopher, char *action, struct timeval time)
 {
-	printf("%02ld%03ld Philosopher %d %s\n", time.tv_sec % 100,
+	printf("%02ld %03ld Philosopher %d %s\n", time.tv_sec % 100,
 		time.tv_usec / 1000, philosopher->id + 1, action);
 }
 

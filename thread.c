@@ -6,7 +6,7 @@
 /*   By: user42 <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2021/07/09 20:25:02 by user42            #+#    #+#             */
-/*   Updated: 2021/07/11 11:09:56 by user42           ###   ########.fr       */
+/*   Updated: 2021/07/22 10:06:07 by tvanbesi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,11 +99,8 @@ int
 		return (-1);
 	i = 0;
 	while (i < n)
-	{
-		if (philo_thread(philosopher[i]) != 0)
+		if (philo_thread(philosopher[i++]) != 0)
 			return (-1);
-		i++;
-	}
 	pthread_join(monitor_t, NULL);
 	return (0);
 }
